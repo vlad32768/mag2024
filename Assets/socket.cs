@@ -35,7 +35,22 @@ public class socket : MonoBehaviour
         inside= false;
     }
 
-    public void connect()
+    public void DisableChildColliders()
+    {
+        for (int i = 0;i<transform.childCount;i++) {
+            print(transform.GetChild(i).name);
+            transform.GetChild(i).GetComponent<Collider>().enabled = false;
+        }
+    }
+    public void EnableChildColliders()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            print(transform.GetChild(i).name);
+            transform.GetChild(i).GetComponent<Collider>().enabled = true;
+        }
+    }
+        public void connect()
     {
         print("Detached!");
         Rigidbody rigidbody = GetComponent<Rigidbody>();
@@ -57,11 +72,12 @@ public class socket : MonoBehaviour
             rigidbody.isKinematic = false;
             coll.isTrigger = false;
         }
+        EnableChildColliders();
     }
     // Update is called once per frame
     void Update()
     {
-        //Collider collider = GetComponent<Collider>();
+        Collider collider = GetComponent<Collider>();
 
 
         
