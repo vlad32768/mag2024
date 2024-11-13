@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 93972924}
   m_Layer: 0
   m_Name: balka
-  m_TagString: Untagged
+  m_TagString: Balka
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -306,6 +306,7 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 0
   xc: 0
+  tagToConnect: Wall
 --- !u!114 &93972925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,7 +571,7 @@ GameObject:
   - component: {fileID: 730868995}
   - component: {fileID: 730868994}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -780,7 +781,7 @@ GameObject:
   - component: {fileID: 1373460317}
   - component: {fileID: 1373460319}
   m_Layer: 0
-  m_Name: Empty
+  m_Name: LoadsGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -799,11 +800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 1476308263}
-  time: 0
-  pause: 0
-  startPause: 0
-  coll: {fileID: 0}
-  nobjects: 0
+  delayTime: 1
 --- !u!4 &1373460318
 Transform:
   m_ObjectHideFlags: 0
@@ -1026,6 +1023,7 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 1
   xc: 0
+  tagToConnect: Balka
 --- !u!65 &1476308268
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1351,7 +1349,7 @@ GameObject:
   - component: {fileID: 1575480077}
   - component: {fileID: 1575480076}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: table1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1514,7 +1512,7 @@ GameObject:
   - component: {fileID: 2067786028}
   m_Layer: 0
   m_Name: wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -5,15 +5,19 @@ using UnityEngine;
 public class Copy : MonoBehaviour 
 {
     public GameObject source;
-    public float time;
-    public bool pause;
-    public float startPause;
-    public BoxCollider coll;
-    public int nobjects = 0;
+    public float delayTime;
+
+
+    float time;
+    bool pause;
+    float startPause;
+    BoxCollider coll;
+    int nobjects = 0;
     // Start is called before the first frame update
     void Start()
     {
        coll = GetComponent<BoxCollider>();
+        Delay();
     }
 
 
@@ -26,7 +30,7 @@ public class Copy : MonoBehaviour
         {
             Instantiate(source, transform.position, transform.rotation);
         }
-        if (pause && Time.time-startPause>2 && nobjects==0)
+        if (pause && Time.time-startPause>delayTime && nobjects==0)
         {
             pause = false;
             Instantiate(source, transform.position, transform.rotation);

@@ -10,6 +10,7 @@ public class socket : MonoBehaviour
     public Transform t;
     public bool is_load;
     public float xc;
+    public string tagToConnect; 
     // Start is called before the first frame update
     void Start()
     {
@@ -54,7 +55,7 @@ public class socket : MonoBehaviour
     {
         print("Detached!");
         Rigidbody rigidbody = GetComponent<Rigidbody>();
-        if (inside)
+        if (inside && t.gameObject.tag == tagToConnect)
         {
             //Transform t = transform;
             xc = transform.position.x - t.position.x;
