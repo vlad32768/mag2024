@@ -1347,6 +1347,7 @@ GameObject:
   - component: {fileID: 1010615254}
   - component: {fileID: 1010615253}
   - component: {fileID: 1010615252}
+  - component: {fileID: 1010615260}
   m_Layer: 0
   m_Name: balka (1)
   m_TagString: Balka
@@ -1618,6 +1619,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1010615260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010615251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4876017e5e90c543b9161bab7df89c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1373460316
 GameObject:
   m_ObjectHideFlags: 0
@@ -1703,6 +1716,7 @@ GameObject:
   - component: {fileID: 1476308266}
   - component: {fileID: 1476308265}
   - component: {fileID: 1476308264}
+  - component: {fileID: 1476308272}
   m_Layer: 0
   m_Name: load
   m_TagString: Load
@@ -1962,6 +1976,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1476308272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476308263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23fa7e942ecc3af45b0f0d1e17cf2b0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadType: 0
+  param: 0
 --- !u!1 &1477528221
 GameObject:
   m_ObjectHideFlags: 0
