@@ -64,7 +64,7 @@ public class socket : MonoBehaviour
             coll.isTrigger = true;
             if (is_load)
             {
-                transform.Translate(new Vector3(xc, 0, 0));
+                transform.Translate(new Vector3(0, 0, xc));
             }
             transform.SetParent(t);
         }
