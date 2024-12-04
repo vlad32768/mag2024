@@ -1,12 +1,24 @@
+using System;
 using UnityEngine;
+using Valve.VR;
 
 public class load_script : MonoBehaviour
 {
+    public void DoSomething(SteamVR_Behaviour_Boolean b, SteamVR_Input_Sources s, Boolean bo)
+    {
+        print(b);
+        print(s);
+        print(bo);
+
+    }
     public enum LoadType
     {
         Force,
         Torque,
-        Load
+        Load,
+        Joint1,
+        Joint2,
+        Console,
     }
 
     public LoadType loadType;

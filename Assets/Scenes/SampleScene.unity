@@ -208,7 +208,7 @@ Transform:
   m_GameObject: {fileID: 93972919}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.28, y: 1.38, z: -1.809}
+  m_LocalPosition: {x: -0.06000012, y: 1.38, z: 0.04100001}
   m_LocalScale: {x: 2, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -305,6 +305,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 0
   xc: 0
+  is_joint: 0
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Wall
 --- !u!114 &93972925
 MonoBehaviour:
@@ -724,7 +727,7 @@ Transform:
   m_GameObject: {fileID: 620823866}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.87, y: 0.516, z: -1.94}
+  m_LocalPosition: {x: 0.53, y: 0.516, z: -0.09}
   m_LocalScale: {x: 2.48, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1202,6 +1205,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 1
   xc: 0
+  is_joint: 0
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Balka
 --- !u!65 &1476308268
 BoxCollider:
@@ -1286,7 +1292,7 @@ Transform:
   m_GameObject: {fileID: 1476308263}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.337, y: 1.223, z: 0.087}
+  m_LocalPosition: {x: -1.112, y: 1.223, z: 0.087}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1933,7 +1939,9 @@ GameObject:
   - component: {fileID: 7902129624814971761}
   - component: {fileID: 7902129624814971760}
   - component: {fileID: 7902129624814971765}
-  m_Layer: 0
+  - component: {fileID: 7902129624814971767}
+  - component: {fileID: 7902129624814971766}
+  m_Layer: 6
   m_Name: Force
   m_TagString: Load
   m_Icon: {fileID: 0}
@@ -1949,7 +1957,7 @@ Transform:
   m_GameObject: {fileID: 173662324076629781}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0.7071068, z: 0, w: 0}
-  m_LocalPosition: {x: -0.15800008, y: 0.055, z: -0.004}
+  m_LocalPosition: {x: -5.607, y: 0.055, z: -0.004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2027,7 +2035,7 @@ Transform:
   m_GameObject: {fileID: 5230616060350021097}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.9082837, y: 0.24000001, z: -2.73}
+  m_LocalPosition: {x: -2.2482839, y: 0.24000001, z: -0.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2087,7 +2095,7 @@ Transform:
   m_GameObject: {fileID: 6182608164172371797}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0.49099994, y: 0.283, z: 0.147}
+  m_LocalPosition: {x: -4.958, y: 0.283, z: 0.147}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2110,7 +2118,7 @@ Transform:
   m_GameObject: {fileID: 2605991682773487330}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.932, y: 0.119, z: 0.136}
+  m_LocalPosition: {x: -4.5169997, y: 0.119, z: 0.136}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2151,7 +2159,7 @@ GameObject:
   - component: {fileID: 4537167223347209818}
   - component: {fileID: 4537167223347209817}
   - component: {fileID: 4537167223347209822}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Joint 1
   m_TagString: Load
   m_Icon: {fileID: 0}
@@ -2208,7 +2216,7 @@ Transform:
   m_GameObject: {fileID: 4127838173133904867}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0.706, y: 0.291, z: 0.136}
+  m_LocalPosition: {x: -4.743, y: 0.291, z: 0.136}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2376,6 +2384,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 1
   xc: 0
+  is_joint: 0
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Balka
 --- !u!65 &4537167223347209821
 BoxCollider:
@@ -2396,7 +2407,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.12500061, y: 0.30088916, z: 0.15653098}
+  m_Size: {x: 0.12500061, y: 0.30088916, z: 0.05}
   m_Center: {x: 0.00000009685755, y: 0.13086975, z: -3.1763695e-22}
 --- !u!114 &4537167223347209822
 MonoBehaviour:
@@ -2482,7 +2493,7 @@ Transform:
   m_GameObject: {fileID: 7035043165168821006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.131, y: 0.041, z: 0.104}
+  m_LocalPosition: {x: -5.58, y: 0.041, z: 0.104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2561,7 +2572,7 @@ MonoBehaviour:
   onDetachFromHand:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5313586160887198666}
+      - m_Target: {fileID: 5230616060350021097}
         m_TargetAssemblyTypeName: socket, Assembly-CSharp
         m_MethodName: connect
         m_Mode: 1
@@ -2673,6 +2684,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 0
   xc: 0
+  is_joint: 0
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Wall
 --- !u!65 &5230616060350021102
 BoxCollider:
@@ -2704,7 +2718,7 @@ Transform:
   m_GameObject: {fileID: 4275523279801300612}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.26, y: 0.24, z: -2.73}
+  m_LocalPosition: {x: -3.696, y: 0.24, z: -0.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2872,6 +2886,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 0
   xc: 0
+  is_joint: 0
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Wall
 --- !u!65 &5313586160887198667
 BoxCollider:
@@ -2927,7 +2944,7 @@ GameObject:
   - component: {fileID: 7852135567383947089}
   - component: {fileID: 7852135567383947088}
   - component: {fileID: 7852135567383947093}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Joint 2
   m_TagString: Load
   m_Icon: {fileID: 0}
@@ -2991,7 +3008,7 @@ GameObject:
   - component: {fileID: 8214377193027663952}
   - component: {fileID: 8214377193027663951}
   - component: {fileID: 8214377193027663956}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Moment
   m_TagString: Load
   m_Icon: {fileID: 0}
@@ -3206,7 +3223,7 @@ MonoBehaviour:
   onDetachFromHand:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8214377193027663954}
+      - m_Target: {fileID: 7852135567383947091}
         m_TargetAssemblyTypeName: socket, Assembly-CSharp
         m_MethodName: connect
         m_Mode: 1
@@ -3318,6 +3335,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 1
   xc: 0
+  is_joint: 1
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Balka
 --- !u!65 &7852135567383947092
 BoxCollider:
@@ -3338,7 +3358,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1250004, y: 0.26216966, z: 0.15653098}
+  m_Size: {x: 0.1250004, y: 0.26216966, z: 0.05}
   m_Center: {x: 0.0000001937151, y: 0.13437334, z: -0.00000023841858}
 --- !u!114 &7852135567383947093
 MonoBehaviour:
@@ -3420,7 +3440,7 @@ MonoBehaviour:
   onDetachFromHand:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8214377193027663954}
+      - m_Target: {fileID: 7902129624814971763}
         m_TargetAssemblyTypeName: socket, Assembly-CSharp
         m_MethodName: connect
         m_Mode: 1
@@ -3532,6 +3552,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 1
   xc: 0
+  is_joint: 0
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Balka
 --- !u!65 &7902129624814971764
 BoxCollider:
@@ -3568,6 +3591,63 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadType: 0
   param: 0
+--- !u!114 &7902129624814971766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173662324076629781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23fa7e942ecc3af45b0f0d1e17cf2b0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadType: 0
+  param: 0
+--- !u!114 &7902129624814971767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173662324076629781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16a9b39235339104889bf8e9178fc630, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  booleanAction:
+    actionPath: /actions/default/in/GrabGrip
+    needsReinit: 0
+  inputSource: 0
+  onChange:
+    m_PersistentCalls:
+      m_Calls: []
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  onPress:
+    m_PersistentCalls:
+      m_Calls: []
+  onPressDown:
+    m_PersistentCalls:
+      m_Calls: []
+  onPressUp:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7902129624814971765}
+        m_TargetAssemblyTypeName: load_script, Assembly-CSharp
+        m_MethodName: DoSomething
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!23 &8214377193027663950
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3775,6 +3855,9 @@ MonoBehaviour:
   t: {fileID: 0}
   is_load: 1
   xc: 0
+  is_joint: 0
+  debug: {x: 0, y: 0, z: 0}
+  debug2: {x: 0, y: 0, z: 0}
   tagToConnect: Balka
 --- !u!65 &8214377193027663955
 BoxCollider:
@@ -3820,7 +3903,7 @@ Transform:
   m_GameObject: {fileID: 4238613134555626676}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 1.1019999, y: 0.11970675, z: 0.13600013}
+  m_LocalPosition: {x: -4.347, y: 0.11970675, z: 0.13600013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
