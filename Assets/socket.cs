@@ -65,9 +65,9 @@ public class socket : MonoBehaviour
             var save_rot = transform.rotation;
             xc = transform.position.x - t.position.x;
 
-            var dotp = Vector2.Dot(Vector3.up, transform.up);
+            var dotp = Vector3.Dot(Vector3.up, transform.up); // Load gameobject orientation * global orientation!
             debug.x = dotp;
-            var dotp2 = Vector2.Dot(new Vector3(1,0,0), transform.forward);
+            var dotp2 = Vector3.Dot(new Vector3(1,0,0), transform.forward);
 
             transform.SetPositionAndRotation(t.position, t.rotation);
 
