@@ -32,8 +32,8 @@ public class balka_solver : MonoBehaviour
     public int StatN = 0;
 
 
-    List <load_data> loads;
-    
+    List<load_data> loads;
+
     struct load_data
     {
         public load_data(float a, float s, load_script b)
@@ -50,7 +50,7 @@ public class balka_solver : MonoBehaviour
 
     void Start()
     {
-        loads = new List <load_data> ();
+        loads = new List<load_data>();
     }
 
     /// <summary>
@@ -70,21 +70,21 @@ public class balka_solver : MonoBehaviour
             switch (item.ls.loadType)
             {
                 case load_script.LoadType.Force:
-                    forceArray.Add(new List<float> { item.z, item.sign * item.ls.param,0 });
-                break;
+                    forceArray.Add(new List<float> { item.z, item.sign * item.ls.param, 0 });
+                    break;
                 case load_script.LoadType.Torque:
                     momentArray.Add(new List<float> { item.z, item.sign * item.ls.param, 0 });
-                break;
+                    break;
                 case load_script.LoadType.Joint1:
                     BoundaryArray.Add(new List<float> { item.z, 1, 0 });
-                break;
+                    break;
                 case load_script.LoadType.Joint2:
                     BoundaryArray.Add(new List<float> { item.z, 2, 0 });
-                break;
+                    break;
                 case load_script.LoadType.Console:
                     BoundaryArray.Add(new List<float> { item.z, 3, 0 });
-                break;
-            }    
+                    break;
+            }
         }
 
 
@@ -121,11 +121,11 @@ public class balka_solver : MonoBehaviour
             }
             if (BoundaryArray.Count == 2)
             {
-                if (BoundaryArray[1][0] > BoundaryArray[0][0]) 
+                if (BoundaryArray[1][0] > BoundaryArray[0][0])
                 {
                     List<float> tempRow = BoundaryArray[0];
                     BoundaryArray[0] = BoundaryArray[1];
-                    BoundaryArray[1] = tempRow; ; 
+                    BoundaryArray[1] = tempRow; ;
                 }
 
                 var z = BoundaryArray[0][0] - BoundaryArray[1][0];
@@ -138,12 +138,12 @@ public class balka_solver : MonoBehaviour
                 }
                 for (int i = 0; i < loadArray.Count; i++)
                 {
-                   // Тут пусто, так как распределенные нагрузки не реализованны
+                    // Тут пусто, так как распределенные нагрузки не реализованны
                 }
                 for (int i = 0; i < momentArray.Count; i++)
                 {
-                   Ra = Ra - momentArray[i][1] / z;
-                   Rb = Rb - momentArray[i][1] / z;
+                    Ra = Ra - momentArray[i][1] / z;
+                    Rb = Rb - momentArray[i][1] / z;
                 }
                 forceArray.Add(new List<float> { BoundaryArray[0][0], Ra, 0 });      // Координата по Z и значение силы
                 forceArray.Add(new List<float> { BoundaryArray[1][0], Rb, 0 });      // Координата по Z и значение силы
@@ -152,9 +152,9 @@ public class balka_solver : MonoBehaviour
         }
         else { print("Балка статическа неопределима, давай по новой"); }
     }
-       
 
-  
+
+
     void Draw()
     {
         combinedArrayQ.Clear();
@@ -172,9 +172,12 @@ public class balka_solver : MonoBehaviour
         combinedArrayM.AddRange(momentArray);
 
         for (int i = 0; i < combinedArrayQ.Count; i++) { intervalsArrayQ.Add(combinedArrayQ[i][0]); }
+        for (int i = 0; i < combinedArrayM.Count; i++) { intervalsArrayM.Add(combinedArrayM[i][0]); }
 
         intervalsArrayQ.Sort();
         intervalsArrayQ = intervalsArrayQ.Distinct().ToList();
+        intervalsArrayM.Sort();
+        intervalsArrayM = intervalsArrayM.Distinct().ToList();
         print("\nIntervalsArrayQ: " + string.Join(", ", intervalsArrayQ));
         print("\nIntervalsArrayM: " + string.Join(", ", intervalsArrayM));
 
@@ -205,7 +208,7 @@ public class balka_solver : MonoBehaviour
             }
 
             QArray.Add(new List<float> { Q1, Q2, z1, z2 });
-            QMax = forceArray.SelectMany(row => new[] { row[0], row[1] }).Max();
+            QMax = QArray.SelectMany(row => new[] { Math.Abs(row[0]), Math.Abs(row[1]) }).Max();
             print("\nQArray: " + Q1 + " " + Q2 + " " + z1 + " " + z2);
         }
 
@@ -246,14 +249,14 @@ public class balka_solver : MonoBehaviour
                 }
             }
             MArray.Add(new List<float> { M1, M2, z1, z2 });
-            MMax = forceArray.SelectMany(row => new[] { row[0], row[1] }).Max();
+            MMax = MArray.SelectMany(row => new[] { Math.Abs(row[0]), Math.Abs(row[1]) }).Max();
             print("\nMArray: " + M1 + " " + M2 + " " + z1 + " " + z2);
         }
     }
 
     void ProcessChildren()
     {
-        loads.Clear ();
+        loads.Clear();
         var num = transform.childCount;
         for (int i = 0; i < num; i++)
         {
@@ -261,7 +264,7 @@ public class balka_solver : MonoBehaviour
             if (child != null)
             {
                 var c = child.localPosition.z;
-                
+
                 var ls = child.gameObject.GetComponent<load_script>();
                 // Load gameobject orientation * global orientation!
                 var dot_up = Vector3.Dot(Vector3.up, child.up);
@@ -270,17 +273,26 @@ public class balka_solver : MonoBehaviour
                 var sgn = dot_up;
                 if (ls.loadType == load_script.LoadType.Torque) sgn *= dotp_fwd;
 
-                loads.Add(new load_data(c,sgn,ls));
+                loads.Add(new load_data(c, sgn, ls));
             }
         }
 
-        loads=loads.OrderBy(a=>a.z).ToList();
-        
+        loads = loads.OrderBy(a => a.z).ToList();
+
         foreach (var item in loads)
         {
-            print(string.Format("z={0},type= {2}, param={1}, sgn={3}", item.z, item.ls.param, item.ls.loadType.ToString(),item.sign));
+            print(string.Format("z={0},type= {2}, param={1}, sgn={3}", item.z, item.ls.param, item.ls.loadType.ToString(), item.sign));
         }
-       
+
+    }
+
+    public void Do_Solve()
+    {
+
+        ProcessChildren();
+        FillArrays();
+        Solve();
+        Draw();
     }
 
     // Update is called once per frame
@@ -288,11 +300,8 @@ public class balka_solver : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            ProcessChildren();
-            FillArrays();
-            Solve();
-            Draw();
+            Do_Solve();
         }
-        
+
     }
 }

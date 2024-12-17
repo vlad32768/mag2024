@@ -90,6 +90,7 @@ public class socket : MonoBehaviour
             }
             //else transform.SetPositionAndRotation(t.position, t.rotation);
             transform.SetParent(t);
+            //CallCalcFunction();
             
         }
         else
@@ -98,7 +99,25 @@ public class socket : MonoBehaviour
             coll.isTrigger = false;
         }
         EnableChildColliders();
+        CallCalcFunction();
     }
+
+
+    public void CallCalcFunction()
+    {
+        var w = GameObject.FindGameObjectWithTag("Wall");
+        if (w != null) 
+            {
+                var b = w.transform.GetChild(0);
+                if (b != null)
+                {
+                    var solver = b.gameObject.GetComponent<balka_solver>();
+                    solver.Do_Solve();
+                }
+
+            }
+    }
+
     // Update is called once per frame
     void Update()
     {
