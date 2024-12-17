@@ -10,29 +10,9 @@ public partial class PieChart : VisualElement
 {
     balka_solver slv;
     
-    float m_Radius = 100.0f;
-    float m_Value = 40.0f;
-
-    public float radius
-    {
-        get => m_Radius;
-        set
-        {
-            m_Radius = value;
-        }
-    }
-
-    public float diameter => m_Radius * 2.0f;
-
-    public float value
-    {
-        get { return m_Value; }
-        set { m_Value = value; MarkDirtyRepaint(); }
-    }
-
     public PieChart()
     {
-        generateVisualContent += DrawCanvas;
+        //generateVisualContent += DrawCanvas;
     }
     public PieChart(balka_solver s)
     {
@@ -46,7 +26,7 @@ public partial class PieChart : VisualElement
         //Console.Write(slv.QArray.ToString());
         var painter = ctx.painter2D;
         painter.strokeColor = Color.white;
-        painter.fillColor = Color.white;
+        painter.fillColor = Color.green;
         painter.BeginPath();
         painter.MoveTo(new Vector2(0, 0));
         painter.LineTo(new Vector2(0, 512));
@@ -56,56 +36,46 @@ public partial class PieChart : VisualElement
         painter.Fill();
         painter.Stroke();
 
+        // Îñü Z ýïþð
+        painter.strokeColor = Color.white;
+        painter.lineWidth = 5;
 
-        painter.strokeColor = Color.blue;
-        painter.fillColor = Color.red;
-        painter.lineWidth = 1;
-
-        //painter.Clear();
         painter.BeginPath();
-        painter.MoveTo(new Vector2(0, 256));
-        painter.LineTo(new Vector2(512, 256));
+        painter.MoveTo(new Vector2(0, 512 / 3));
+        painter.LineTo(new Vector2(512, 512 / 3));
+        painter.MoveTo(new Vector2(0, 512 / 3 * 2));
+        painter.LineTo(new Vector2(512, 512 / 3 * 2));
         painter.ClosePath();
         painter.Stroke();
 
-        painter.strokeColor = Color.red;
-        painter.fillColor = Color.green;
-        painter.lineWidth = 1;
-        
+
+        painter.strokeColor = Color.blue;
+        painter.lineWidth = 5;
         painter.BeginPath();
-        painter.MoveTo(new Vector2(0, 256));
-        for (float i = 0; i < 4 * Mathf.PI; i+=0.1f)
+        float w = 512 * 0.9f;
+        float b = (512 - w) / 2;
+        float h = 512 * 0.4f;
+        float hq = 512 / 3 * 2;
+        float hm = 512 / 3;
+        if (slv.QArray.Count != 0)
         {
-            painter.LineTo(new Vector2(i * 512.0f / (4.0f * (Mathf.PI)), 256.0f + (Mathf.Sin(i)+UnityEngine.Random.value / 4.0f-0.2f) * 128));
-        };
-        painter.Stroke();
+            painter.MoveTo(new Vector2(b,hq));
+            painter.LineTo(new Vector2(slv.QArray[0][2] / 2 * 512, 512 / 3 * 2));
+            painter.LineTo(new Vector2(slv.QArray[0][2] / 2 * 512, slv.QArray[0][0] / slv.QMax * 512 / 3 + 512 / 3 * 2));
 
-        //painter.Fill();
-        /*
-        var percentage = m_Value;
+            for (int i = 0; i < slv.QArray.Count; i++)
+            {
+                var x1 = slv.QArray[i][2] / 2 * 512;
+                var x2 = slv.QArray[i][3] / 2 * 512;
+                var y1 = slv.QArray[i][0] / slv.QMax * 512 / 3 + 512 / 3 * 2;
+                var y2 = slv.QArray[i][1] / slv.QMax * 512 / 3 + 512 / 3 * 2;
 
-        var percentages = new float[] {
-            percentage, 100 - percentage
-        };
-        var colors = new Color32[] {
-            new Color32(182,235,122,255),
-            new Color32(251,120,19,255)
-        };
-        float angle = 0.0f;
-        float anglePct = 0.0f;
-        int k = 0;
-        foreach (var pct in percentages)
-        {
-            anglePct += 360.0f * (pct / 100);
-
-            painter.fillColor = colors[k++];
-            painter.BeginPath();
-            painter.MoveTo(new Vector2(m_Radius, m_Radius));
-            painter.Arc(new Vector2(m_Radius, m_Radius), m_Radius, angle, anglePct);
-            painter.Fill();
-
-            angle = anglePct;
+                painter.LineTo(new Vector2(x1, y1));
+                painter.LineTo(new Vector2(x2, y2));
+            }
+            painter.LineTo(new Vector2(slv.QArray[slv.QArray.Count - 1][3] / 2 * 512, 512 / 3 * 2));
+            painter.LineTo(new Vector2(512, 512 / 3 * 2));
+            painter.Stroke();
         }
-        */
     }
 }

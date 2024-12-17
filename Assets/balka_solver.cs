@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using System.IO.Compression;
+using System;
+
 public class balka_solver : MonoBehaviour
 {
 
@@ -12,20 +15,21 @@ public class balka_solver : MonoBehaviour
     List<List<float>> BoundaryArray = new List<List<float>>();
     List<List<float>> ReactionArray = new List<List<float>>();
 
-    List<List<float>> combinedArray = new List<List<float>>();
-    List<float> intervalsArray = new List<float>();
+    List<List<float>> combinedArrayQ = new List<List<float>>();
+    List<List<float>> combinedArrayM = new List<List<float>>();
+    List<float> intervalsArrayQ = new List<float>();
+    List<float> intervalsArrayM = new List<float>();
     public List<List<float>> QArray = new List<List<float>>();
     public List<List<float>> MArray = new List<List<float>>();
 
-    public float R = 0;
-    public float H = 0;
-    public float M = 0;
-    public int intervals = 0;
-    public int intervalsFL = 0;
-    public int intervalsM = 0;
-    public int StatN = 0;
-    public int Row = 0;
+    public float Ra = 0;
+    public float Ma = 0;
+    public float Rb = 0;
+    public float QMax = 0;
+    public float MMax = 0;
 
+    public int intervals = 0;
+    public int StatN = 0;
 
 
     List <load_data> loads;
@@ -71,115 +75,150 @@ public class balka_solver : MonoBehaviour
                 case load_script.LoadType.Torque:
                     momentArray.Add(new List<float> { item.z, item.sign * item.ls.param, 0 });
                 break;
+                case load_script.LoadType.Joint1:
+                    BoundaryArray.Add(new List<float> { item.z, 1, 0 });
+                break;
+                case load_script.LoadType.Joint2:
+                    BoundaryArray.Add(new List<float> { item.z, 2, 0 });
+                break;
+                case load_script.LoadType.Console:
+                    BoundaryArray.Add(new List<float> { item.z, 3, 0 });
+                break;
             }    
         }
 
-        BoundaryArray.Add(new List<float> {0,3,0});
+
     }
 
     void Solve()
     {
-        StatN = 0;
-
-
-        R = 0;
-        H = 0;
-        M = 0;
-        intervals = 0;
-        intervalsFL = 0;
-        intervalsM = 0;
-        StatN = 0;
-        Row = 0;
-
+        StatN = 0; Ra = 0; Ma = 0; Rb = 0; intervals = 0;
 
         for (int i = 0; i < BoundaryArray.Count; i++) { StatN = StatN + (int)BoundaryArray[i][1]; }
-        if (StatN != 3) { print("Балка статическа неопределима, давай по новой"); }
-
-        if (BoundaryArray.Count == 1 && BoundaryArray[0][0] == 0 && BoundaryArray[0][1] == 3)
+        print("StatN: " + StatN + "BoundaryArray.Count" + BoundaryArray.Count);
+        if (StatN == 3)
         {
-            for (int i = 0; i < forceArray.Count; i++)
+            if (BoundaryArray.Count == 1)
             {
-                R = R - forceArray[i][1];
-                M = M - forceArray[i][0] * forceArray[i][1];
-            }
-            for (int i = 0; i < loadArray.Count; i++)
-            {
-                R = R - (loadArray[i][1] - loadArray[i][0]) * loadArray[i][2];
-                M = M - (loadArray[i][0] + (loadArray[i][1] - loadArray[i][0]) / 2) * (loadArray[i][1] - loadArray[i][0]) * loadArray[i][2];
-            }
-            for (int i = 0; i < momentArray.Count; i++)
-            {
-                M = M - momentArray[i][1];
-            }
-            forceArray.Add(new List<float> { BoundaryArray[0][0], R, 0 });      // Координата по Z и значение силы 3
-            momentArray.Add(new List<float> { BoundaryArray[0][0], M, 0 });      // Координата по Z и значение силы 3
-            intervals = BoundaryArray.Count + momentArray.Count + forceArray.Count + loadArray.Count * 2 - 1;
-            intervalsFL = intervals - momentArray.Count;
-            intervalsM = intervals;
-        }
+                for (int i = 0; i < forceArray.Count; i++)
+                {
+                    Ra = Ra - forceArray[i][1];
+                    Ma = Ma - forceArray[i][0] * Math.Abs(forceArray[i][1] - BoundaryArray[0][0]);
+                }
+                for (int i = 0; i < loadArray.Count; i++)
+                {
+                    // Распределенная нагрузка пока не реализована :-( 
+                    //Ra = Ra - (loadArray[i][1] - loadArray[i][0]) * loadArray[i][2];
+                    //Ma = Ma - (loadArray[i][0] + (loadArray[i][1] - loadArray[i][0]) / 2) * (loadArray[i][1] - loadArray[i][0]) * loadArray[i][2];
+                }
+                for (int i = 0; i < momentArray.Count; i++)
+                {
+                    Ma = Ma - momentArray[i][1];
+                }
+                forceArray.Add(new List<float> { BoundaryArray[0][0], Ra, 0 });      // Координата по Z и значение силы 3
+                momentArray.Add(new List<float> { BoundaryArray[0][0], Ma, 0 });      // Координата по Z и значение силы 3
 
-        
+            }
+            if (BoundaryArray.Count == 2)
+            {
+                if (BoundaryArray[1][0] > BoundaryArray[0][0]) 
+                {
+                    List<float> tempRow = BoundaryArray[0];
+                    BoundaryArray[0] = BoundaryArray[1];
+                    BoundaryArray[1] = tempRow; ; 
+                }
+
+                var z = BoundaryArray[0][0] - BoundaryArray[1][0];
+                for (int i = 0; i < forceArray.Count; i++)
+                {
+                    var z1 = -1 * (BoundaryArray[1][0] - forceArray[i][0]);
+                    var z2 = 1 * (BoundaryArray[0][0] - forceArray[i][0]);
+                    Ra = Ra - forceArray[i][1] * z1 / z;
+                    Rb = Rb - forceArray[i][1] * z2 / z;
+                }
+                for (int i = 0; i < loadArray.Count; i++)
+                {
+                   // Тут пусто, так как распределенные нагрузки не реализованны
+                }
+                for (int i = 0; i < momentArray.Count; i++)
+                {
+                   Ra = Ra - momentArray[i][1] / z;
+                   Rb = Rb - momentArray[i][1] / z;
+                }
+                forceArray.Add(new List<float> { BoundaryArray[0][0], Ra, 0 });      // Координата по Z и значение силы
+                forceArray.Add(new List<float> { BoundaryArray[1][0], Rb, 0 });      // Координата по Z и значение силы
+            }
+            intervals = BoundaryArray.Count + momentArray.Count + forceArray.Count + loadArray.Count * 2 - 1;
+        }
+        else { print("Балка статическа неопределима, давай по новой"); }
     }
+       
 
   
     void Draw()
     {
-        combinedArray.Clear();
-        intervalsArray.Clear();
+        combinedArrayQ.Clear();
+        combinedArrayM.Clear();
+        intervalsArrayQ.Clear();
+        intervalsArrayM.Clear();
         QArray.Clear();
         MArray.Clear();
 
-        combinedArray.AddRange(forceArray);
-        combinedArray.AddRange(loadArray);
-        combinedArray.AddRange(momentArray);
-        //combinedArray.AddRange(BoundaryArray);
+        combinedArrayQ.AddRange(forceArray);
+        combinedArrayQ.AddRange(loadArray);
 
-        for (int i = 0; i < combinedArray.Count; i++) { intervalsArray.Add(combinedArray[i][0]); }
+        combinedArrayM.AddRange(forceArray);
+        combinedArrayM.AddRange(loadArray);
+        combinedArrayM.AddRange(momentArray);
 
-        intervalsArray.Sort();
-        intervalsArray = intervalsArray.Distinct().ToList();
-        print("\nIntervalsArray: " + string.Join(", ", intervalsArray));
+        for (int i = 0; i < combinedArrayQ.Count; i++) { intervalsArrayQ.Add(combinedArrayQ[i][0]); }
+
+        intervalsArrayQ.Sort();
+        intervalsArrayQ = intervalsArrayQ.Distinct().ToList();
+        print("\nIntervalsArrayQ: " + string.Join(", ", intervalsArrayQ));
+        print("\nIntervalsArrayM: " + string.Join(", ", intervalsArrayM));
 
         // Расчет значений для эпюры поперечных сил
-        for (int i = 1; i < intervalsArray.Count; i++)
+        for (int i = 1; i < intervalsArrayQ.Count; i++)
         {
             float Q1 = 0; float Q2 = 0; float z1 = 0; float z2 = 0;
             for (int j = 0; j < forceArray.Count; j++)
             {
-                if (forceArray[j][0] < intervalsArray[i])
+                if (forceArray[j][0] < intervalsArrayQ[i])
                 {
-                    Q1 = Q1 + forceArray[j][1];
+                    Q1 = Q1 - forceArray[j][1];
                     Q2 = Q1;
-                    z1 = intervalsArray[i - 1];
-                    z2 = intervalsArray[i];
+                    z1 = intervalsArrayQ[i - 1];
+                    z2 = intervalsArrayQ[i];
                 }
             }
 
             for (int k = 0; k < loadArray.Count; k++)
             {
-                if (loadArray[k][0] < intervalsArray[i])
+                if (loadArray[k][0] < intervalsArrayQ[i])
                 {
                     Q1 = Q1 + 0;
                     Q2 = Q2 + 0;
-                    z1 = intervalsArray[i - 1];
-                    z2 = intervalsArray[i];
+                    z1 = intervalsArrayQ[i - 1];
+                    z2 = intervalsArrayQ[i];
                 }
             }
 
             QArray.Add(new List<float> { Q1, Q2, z1, z2 });
+            QMax = forceArray.SelectMany(row => new[] { row[0], row[1] }).Max();
             print("\nQArray: " + Q1 + " " + Q2 + " " + z1 + " " + z2);
         }
 
         // Расчет значений для эпюры изгибающих моментов
-        for (int i = 1; i < intervalsArray.Count; i++)
+        for (int i = 1; i < intervalsArrayM.Count; i++)
         {
             float M1 = 0; float M2 = 0; float z1 = 0; float z2 = 0;
             for (int j = 0; j < forceArray.Count; j++)
             {
-                if (forceArray[j][0] < intervalsArray[i])
+                if (forceArray[j][0] < intervalsArrayM[i])
                 {
-                    z1 = intervalsArray[i - 1];
-                    z2 = intervalsArray[i];
+                    z1 = intervalsArrayM[i - 1];
+                    z2 = intervalsArrayM[i];
                     M1 = M1 + forceArray[j][1] * (z1 - forceArray[j][0]);
                     M2 = M2 + forceArray[j][1] * (z2 - forceArray[j][0]);
                 }
@@ -187,10 +226,10 @@ public class balka_solver : MonoBehaviour
 
             for (int j = 0; j < loadArray.Count; j++)
             {
-                if (loadArray[j][0] < intervalsArray[i])
+                if (loadArray[j][0] < intervalsArrayM[i])
                 {
-                    z1 = intervalsArray[i - 1];
-                    z2 = intervalsArray[i];
+                    z1 = intervalsArrayM[i - 1];
+                    z2 = intervalsArrayM[i];
                     M1 = M1 + 0;
                     M2 = M2 + 0;
                 }
@@ -198,20 +237,18 @@ public class balka_solver : MonoBehaviour
 
             for (int j = 0; j < momentArray.Count; j++)
             {
-                if (momentArray[j][0] < intervalsArray[i])
+                if (momentArray[j][0] < intervalsArrayM[i])
                 {
-                    z1 = intervalsArray[i - 1];
-                    z2 = intervalsArray[i];
+                    z1 = intervalsArrayM[i - 1];
+                    z2 = intervalsArrayM[i];
                     M1 = M1 - momentArray[j][1];
                     M2 = M2 - momentArray[j][1];
                 }
             }
             MArray.Add(new List<float> { M1, M2, z1, z2 });
+            MMax = forceArray.SelectMany(row => new[] { row[0], row[1] }).Max();
             print("\nMArray: " + M1 + " " + M2 + " " + z1 + " " + z2);
         }
-
-
-
     }
 
     void ProcessChildren()
@@ -220,7 +257,6 @@ public class balka_solver : MonoBehaviour
         var num = transform.childCount;
         for (int i = 0; i < num; i++)
         {
-            string s;
             var child = transform.GetChild(i);
             if (child != null)
             {

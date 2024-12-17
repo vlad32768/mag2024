@@ -105,6 +105,22 @@ namespace Valve.VR
             }
         }
         
+        public virtual SteamVR_Action_Boolean SetLoadUp
+        {
+            get
+            {
+                return SteamVR_Actions.default_SetLoadUp;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean SetLoadDown
+        {
+            get
+            {
+                return SteamVR_Actions.default_SetLoadDown;
+            }
+        }
+        
         public virtual SteamVR_Action_Vibration Haptic
         {
             get
