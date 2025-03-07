@@ -252,6 +252,11 @@ public class balka_solver : MonoBehaviour
             MMax = MArray.SelectMany(row => new[] { Math.Abs(row[0]), Math.Abs(row[1]) }).Max();
             print("\nMArray: " + M1 + " " + M2 + " " + z1 + " " + z2);
         }
+
+
+        GameObject p = GameObject.Find("testdeepseek");
+        DataPlotter dp = p.GetComponent<DataPlotter>();
+
     }
 
     void ProcessChildren()
