@@ -5,14 +5,13 @@ using System.Linq;
 using Unity.VisualScripting;
 using System.IO.Compression;
 using System;
-
+using UnityEngine.Rendering;
 public class balka_solver : MonoBehaviour
 {
-
     List<List<float>> forceArray = new List<List<float>>();
     List<List<float>> loadArray = new List<List<float>>();
     List<List<float>> momentArray = new List<List<float>>();
-    List<List<float>> BoundaryArray = new List<List<float>>();
+    public List<List<float>> BoundaryArray = new List<List<float>>();
     List<List<float>> ReactionArray = new List<List<float>>();
 
     List<List<float>> combinedArrayQ = new List<List<float>>();
@@ -27,6 +26,7 @@ public class balka_solver : MonoBehaviour
     public float Rb = 0;
     public float QMax = 0;
     public float MMax = 0;
+    
 
     public int intervals = 0;
     public int StatN = 0;
@@ -291,9 +291,90 @@ public class balka_solver : MonoBehaviour
 
     }
 
+    public float CalculateDeflection(float z)
+    {
+        // Суммируем вклады от моментов, сил и распределенных нагрузок
+        float sumMomentsZ1 = 0;
+        float sumForcesZ1 = 0;
+
+        float sumMomentsZ2 = 0;
+        float sumForcesZ2 = 0;
+
+        float z1 = BoundaryArray[0][0];
+        float z2 = BoundaryArray[1][0];
+        float EIx = 50;
+
+
+        // Вклад от сосредоточенных моментов
+        foreach (var moment in momentArray)
+        {
+            float a_i = moment[0]; // Расстояние до момента
+            if (z1 >= a_i) sumMomentsZ1 += moment[1] * Mathf.Pow(z1 - a_i, 2) / 2;
+            if (z2 >= a_i) sumMomentsZ2 += moment[1] * Mathf.Pow(z2 - a_i, 2) / 2;
+        }
+
+        // Вклад от сосредоточенных сил
+        foreach (var force in forceArray)
+        {
+            float b_i = force[0]; // Расстояние до силы
+            if (z1 >= b_i) sumForcesZ1 += force[1] * Mathf.Pow(z1 - b_i, 3) / 6;
+            if (z2 >= b_i) sumForcesZ2 += force[1] * Mathf.Pow(z2 - b_i, 3) / 6;
+        }
+
+        // Рассчитываем theta0
+        float deltaZ = z2 - z1;
+        float theta0 = -((sumMomentsZ2 - sumMomentsZ1) + (sumForcesZ2 - sumForcesZ1)) / (deltaZ * EIx);
+
+        // Рассчитываем y0
+        float y0 = -theta0 * z1 - (sumMomentsZ1 + sumForcesZ1) / EIx;
+
+
+        float deflection = y0 + theta0 * z;
+
+        // Вклад сосредоточенных моментов
+        foreach (var moment in momentArray)
+        {
+            float a_i = moment[0]; // Расстояние до момента
+            if (z >= a_i)
+            {
+                deflection += moment[1] * Mathf.Pow(z - a_i, 2) / (2 * EIx);
+            }
+        }
+
+        // Вклад сосредоточенных сил
+        foreach (var force in forceArray)
+        {
+            float b_i = force[0]; // Расстояние до силы
+            if (z >= b_i)
+            {
+                deflection += force[1] * Mathf.Pow(z - b_i, 3) / (6 * EIx);
+            }
+        }
+        return deflection;
+    }
+
+
+    //void Ex()
+    //{
+    //    float z1 = BoundaryArray[0][0];
+    //    float z2 = BoundaryArray[1][0];
+    //    float EIx = 1000; // Жесткость балки
+
+    //    // Рассчитываем начальные параметры
+    //    var (y0, theta0) = CalculateInitialParameters(z1, z2, EIx);
+
+    //    Debug.Log($"Начальные параметры: y0 = {y0}, theta0 = {theta0}");
+
+    //    // Теперь можно использовать y0 и theta0 для расчета прогиба в любой точке
+    //    float z = 2; // Точка, в которой рассчитываем прогиб
+    //    float deflection = CalculateDeflection(z, y0, theta0, EIx);
+
+    //    Debug.Log($"Прогиб в точке z = {z} равен {deflection}");
+    //}
+
+
     public void Do_Solve()
     {
-
         ProcessChildren();
         FillArrays();
         Solve();

@@ -1,40 +1,70 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class test_generate : MonoBehaviour
 {
     MeshFilter mf;
     MeshRenderer mr;
     public Mesh m;
-
+    public balka_solver bs;
+    public float EI = 1000f;
+    public float yc = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        mf = gameObject.GetComponent<MeshFilter>();
 
+    List<Vector3> GenerateIBeam()
+    {
+        List<Vector3> IBeam = new List<Vector3>();
+        IBeam.Add(new Vector3(0, 0, 0));
+        IBeam.Add(new Vector3(0.3f, 0, 0));
+        IBeam.Add(new Vector3(0.3f, 0.1f, 0));
+
+        IBeam.Add(new Vector3(0.2f, 0.1f, 0));
+        IBeam.Add(new Vector3(0.2f, 0.5f, 0));
+        IBeam.Add(new Vector3(0.3f, 0.5f, 0));
+
+        IBeam.Add(new Vector3(0.3f, 0.6f, 0));
+        IBeam.Add(new Vector3(0, 0.6f, 0));
+        IBeam.Add(new Vector3(0, 0.5f, 0));
+
+        IBeam.Add(new Vector3(0.1f, 0.5f, 0));
+        IBeam.Add(new Vector3(0.1f, 0.1f, 0));
+        IBeam.Add(new Vector3(0f, 0.1f, 0));
+        float sc = 1f / 3f;
+
+        for (int i = 0; i < IBeam.Count; ++i)
+        {
+            IBeam[i] *= sc;
+        }
+        return IBeam;
+    }
+    
+    
+
+    private void GenerateBeamMesh()
+    {
+      
         List<Vector3> vtx = new List<Vector3>();
         List<int> tris = new List<int>();
 
+
         float r = 0.2f;
         int sctn = 10;
-        int n = 8;
+
+
+        var IBeam = GenerateIBeam();
 
         for (int i = 0; i < sctn; i++)
         {
-            float z = 0.1f * i;
-
-            for (int j = 0; j < n; j++)
+            Vector3 z = Vector3.forward * 2f / sctn * i;
+            Vector3 y = Vector3.up * bs.CalculateDeflection(z.z);
+            for (int j = 0; j < IBeam.Count; j++)
             {
-                float angle = 2 * Mathf.PI / n * j;
-                vtx.Add(new Vector3(r*Mathf.Cos(angle), r * Mathf.Sin(angle), z));
-                //vtx.Add(new Vector3(0.3f, z * z, z));
-                //vtx.Add(new Vector3(0.3f, 0.3f + z * z, z));
-                //vtx.Add(new Vector3(0, 0.3f + z * z, z));
+                vtx.Add(IBeam[j] + z + y);
             }
-
-            
-            
         }
+        
+        var n = IBeam.Count;
         for (int i = 0; i < sctn - 1; i++)
         {
 
@@ -43,100 +73,37 @@ public class test_generate : MonoBehaviour
                 // <cond>?<exp1>:<exp2>
                 int jnext = j == n - 1 ? 0 : j + 1;
                 tris.Add(jnext + (i + 1) * n);
-                tris.Add(j + (i+1) * n);
+                tris.Add(j + (i + 1) * n);
                 tris.Add(j + i * n);
 
                 tris.Add(jnext + i * n);
-                tris.Add(jnext + (i+1) * n);
+                tris.Add(jnext + (i + 1) * n);
                 tris.Add(j + i * n);
             }
-            
-
         }
-
-
-
-        //for (int i = 0; i < sctn; i++)
-        //{
-        //    float z = 0.1f * i;
-        //    vtx.Add(new Vector3(0, z * z, z));
-        //    vtx.Add(new Vector3(0.3f, z * z, z));
-        //    vtx.Add(new Vector3(0.3f, 0.3f + z * z, z));
-        //    vtx.Add(new Vector3(0, 0.3f + z * z, z));
-        //}
-
-        //tris.Add(0);
-        //tris.Add(2);
-        //tris.Add(1);
-
-        //tris.Add(0);
-        //tris.Add(3);
-        //tris.Add(2);
-
-        //tris.Add((sctn - 1) * 4 + 1);
-        //tris.Add((sctn - 1) * 4 + 2);
-        //tris.Add((sctn - 1) * 4 + 0);
-
-        //tris.Add((sctn - 1) * 4 + 2);
-        //tris.Add((sctn - 1) * 4 + 3);
-        //tris.Add((sctn - 1) * 4 + 0);
-
-        //for (int i = 0; i < sctn - 1; i++)
-        //{
-        //    tris.Add(4 * i + 1);
-        //    tris.Add(4 * i + 5);
-        //    tris.Add(4 * i + 0);
-
-        //    tris.Add(4 * i + 5);
-        //    tris.Add(4 * i + 4);
-        //    tris.Add(4 * i + 0);
-        //    //1
-        //    tris.Add(4 * i + 2);
-        //    tris.Add(4 * i + 6);
-        //    tris.Add(4 * i + 1);
-
-        //    tris.Add(4 * i + 6);
-        //    tris.Add(4 * i + 5);
-        //    tris.Add(4 * i + 1);
-        //    //2
-        //    tris.Add(4 * i + 3);
-        //    tris.Add(4 * i + 7);
-        //    tris.Add(4 * i + 2);
-
-        //    tris.Add(4 * i + 7);
-        //    tris.Add(4 * i + 6);
-        //    tris.Add(4 * i + 2);
-        //    //3
-        //    tris.Add(4 * i + 3);
-        //    tris.Add(4 * i + 0);
-        //    tris.Add(4 * i + 4);
-
-        //    tris.Add(4 * i + 3);
-        //    tris.Add(4 * i + 4);
-        //    tris.Add(4 * i + 7);
-        //    //4
-        //}
-
-
-
-
-
-
 
         m = new Mesh();
         m.vertices = vtx.ToArray();
         m.triangles = tris.ToArray();
-        m.name = "AAAMESH";
-
+        m.name = "Beam_Mesh";
+    }
+    void Start()
+    {
+        mf = gameObject.GetComponent<MeshFilter>();
+        GenerateBeamMesh();
         mf.mesh = m;
-        
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            yc = bs.CalculateDeflection(1f);
+            mf = gameObject.GetComponent<MeshFilter>();
+            GenerateBeamMesh();
+            mf.mesh = m;
+        }
+
     }
 }
