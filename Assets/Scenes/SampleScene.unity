@@ -4493,7 +4493,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m: {fileID: 0}
   bs: {fileID: 5313586160887198668}
-  EI: 1
   yc: 0
 --- !u!1 &1143217709
 GameObject:
@@ -8110,6 +8109,7 @@ GameObject:
   - component: {fileID: 5313586160887198664}
   - component: {fileID: 5313586160887198663}
   - component: {fileID: 5313586160887198668}
+  - component: {fileID: 5313586160887198669}
   m_Layer: 0
   m_Name: I-Beam
   m_TagString: Balka
@@ -8840,6 +8840,21 @@ MonoBehaviour:
   MMax: 0
   intervals: 0
   StatN: 0
+--- !u!114 &5313586160887198669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4275523279801300612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76fd8e1f098c814eba89e3b302ea12f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m: {fileID: 0}
+  bs: {fileID: 5313586160887198668}
+  yc: 0
 --- !u!33 &5625428196019308274
 MeshFilter:
   m_ObjectHideFlags: 0
