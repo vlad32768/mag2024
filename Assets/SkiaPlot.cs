@@ -75,13 +75,17 @@ public class SkiaPlot : MonoBehaviour
 
     void CreateTexture()
     {
-        texture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+        // Vlad: it seems that Wintel default texture format is BGRA32
+        // Skia and Unity texture formats must be the same
+        texture = new Texture2D(textureWidth, textureHeight, TextureFormat.BGRA32, false);
+        //texture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
         rawImage.texture = texture;
     }
 
     SKColor ToSKColor(Color c)
     {
-        return new SKColor((byte)(c.r * 255.0f),
+        return new SKColor(
+            (byte)(c.r * 255.0f),
             (byte)(c.g * 255.0f),
             (byte)(c.b * 255.0f),
             (byte)(c.a * 255.0f));
@@ -89,7 +93,10 @@ public class SkiaPlot : MonoBehaviour
 
     void DrawPlot()
     {
-        var info = new SKImageInfo(textureWidth, textureHeight);
+        // Vlad: Skia's default texture format is BGRA on Windows. 
+        // Skia and Unity texture formats must be the same
+        var info = new SKImageInfo(textureWidth, textureHeight/*,SKColorType.Bgra8888*/);
+        //var info = new SKImageInfo(textureWidth, textureHeight,SKColorType.Rgba8888);
         using (var surface = SKSurface.Create(info))
         {
             var canvas = surface.Canvas;
@@ -114,8 +121,8 @@ public class SkiaPlot : MonoBehaviour
     {
         var paint2 = new SKPaint
         {
-            Color = new SKColor(255,0,0),
-            StrokeWidth = 3,
+            Color = new SKColor(255,0,0,255),
+            StrokeWidth = 4,
             IsAntialias = true
         };
         canvas.DrawLine(0, 0, 200, 100, paint2);
@@ -174,12 +181,14 @@ public class SkiaPlot : MonoBehaviour
             IsAntialias = true
         };
 
+        var labelFont = new SKFont(font, tickLabelFontSize);
+
         var labelPaint = new SKPaint
         {
             Color = ToSKColor(axisColor),
-            TextSize = tickLabelFontSize,
+            //TextSize = tickLabelFontSize,
             IsAntialias = true,
-            Typeface = font
+            //Typeface = font
         };
 
         // X axis ticks
@@ -194,8 +203,14 @@ public class SkiaPlot : MonoBehaviour
             // Tick label
             string label = x.ToString("0.##");
             var textBounds = new SKRect();
-            labelPaint.MeasureText(label, ref textBounds);
-            canvas.DrawText(label, pos.X - textBounds.Width / 2, pos.Y + tickLength + textBounds.Height, labelPaint);
+
+            //labelPaint.MeasureText(label, ref textBounds);
+            //canvas.DrawText(label, pos.X - textBounds.Width / 2, pos.Y + tickLength + textBounds.Height, labelPaint);
+            
+            // Vlad: Modern text stuff uses distinct SkFont structure; font stuff in SkPaint structure is obsolete 
+
+            labelFont.MeasureText(label, out textBounds, labelPaint);
+            canvas.DrawText(label, pos.X - textBounds.Width / 2, pos.Y + tickLength + textBounds.Height,labelFont, labelPaint);
         }
 
         // Y axis ticks
